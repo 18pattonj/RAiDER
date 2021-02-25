@@ -9,8 +9,11 @@ from datetime import time
 from test import TEST_DIR
 from osgeo import gdal, osr
 
+from RAiDER.mathFcns import (
+    sind, cosd,
+)
 from RAiDER.utilFcns import (
-    _least_nonzero, cosd, gdal_open, makeDelayFileNames, sind,
+    _least_nonzero, gdal_open, makeDelayFileNames,
     writeArrayToRaster, writeResultsToHDF5, gdal_extents, modelName2Module,
     getTimeFromFile
 )

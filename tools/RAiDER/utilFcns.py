@@ -11,21 +11,14 @@ import pandas as pd
 import pyproj
 from osgeo import gdal, osr
 
+import RAiDER.mathFcns as mathFcns
+
 from RAiDER.constants import Zenith
 from RAiDER import Geo2rdr
 from RAiDER.logger import *
 
+
 gdal.UseExceptions()
-
-
-def sind(x):
-    """Return the sine of x when x is in degrees."""
-    return np.sin(np.radians(x))
-
-
-def cosd(x):
-    """Return the cosine of x when x is in degrees."""
-    return np.cos(np.radians(x))
 
 
 def lla2ecef(lat, lon, height):
@@ -41,11 +34,11 @@ def enu2ecef(east, north, up, lat0, lon0, h0):
     # https://github.com/scivision/pymap3d/blob/master/pymap3d/__init__.py
     x0, y0, z0 = lla2ecef(lat0, lon0, h0)
 
-    t = cosd(lat0) * up - sind(lat0) * north
-    w = sind(lat0) * up + cosd(lat0) * north
+    t = mathFcns.cosd(lat0) * up - mathFcns.sind(lat0) * north
+    w = mathFcns.sind(lat0) * up + mathFcns.cosd(lat0) * north
 
-    u = cosd(lon0) * t - sind(lon0) * east
-    v = sind(lon0) * t + cosd(lon0) * east
+    u = mathFcns.cosd(lon0) * t - mathFcns.sind(lon0) * east
+    v = mathFcns.sind(lon0) * t + mathFcns.cosd(lon0) * east
 
     my_ecef = np.stack((x0 + u, y0 + v, z0 + w))
 
@@ -233,7 +226,7 @@ def _get_Re(lats):
     # TODO: verify constants, add to base class constants?
     Rmax = 6378137
     Rmin = 6356752
-    return np.sqrt(1 / (((cosd(lats)**2) / Rmax**2) + ((sind(lats)**2) / Rmin**2)))
+    return np.sqrt(1 / (((cosd(lats)**2) / Rmax**2) + ((mathFcns.sind(lats)**2) / Rmin**2)))
 
 
 def _geo_to_ht(lats, hts, g0=9.80556):
