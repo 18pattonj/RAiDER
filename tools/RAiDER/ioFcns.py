@@ -15,6 +15,6 @@ from osgeo import gdal, osr
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 
-from RAiDER.geometry import checkLOS
+from RAiDER.utilFcns import checkLOS
 
 gdal.UseExceptions()

@@ -16,3 +16,13 @@ from RAiDER import Geo2rdr
 from RAiDER.logger import *
 
 gdal.UseExceptions()
+
+
+def sind(x):
+    """Return the sine of x when x is in degrees."""
+    return np.sin(np.radians(x))
+
+
+def cosd(x):
+    """Return the cosine of x when x is in degrees."""
+    return np.cos(np.radians(x))

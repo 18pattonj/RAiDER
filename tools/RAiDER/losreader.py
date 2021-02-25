@@ -15,6 +15,7 @@ import xml.etree.ElementTree as ET
 import numpy as np
 
 import RAiDER.utilFcns as utilFcns
+import RAiDER.utilFcns as mathFcns
 from RAiDER import Geo2rdr
 from RAiDER.constants import _ZREF, Zenith
 
@@ -253,15 +254,15 @@ def los_to_lv(incidence, heading, lats, lons, heights, zref, ranges=None):
     a_0 = incidence
     a_1 = heading
 
-    east = utilFcns.sind(a_0) * utilFcns.cosd(a_1 + 90)
-    north = utilFcns.sind(a_0) * utilFcns.sind(a_1 + 90)
-    up = utilFcns.cosd(a_0)
+    east = mathFcns.sind(a_0) * mathFcns.cosd(a_1 + 90)
+    north = mathFcns.sind(a_0) * mathFcns.sind(a_1 + 90)
+    up = mathFcns.cosd(a_0)
     east, north, up = np.stack((east, north, up))
 
     # Pick reasonable range to top of troposphere if not provided
     if ranges is None:
         ranges = (zref - heights) / up
-    #slant_range = ranges = (zref - heights) / utilFcns.cosd(inc)
+    #slant_range = ranges = (zref - heights) / mathFcns.cosd(inc)
 
     # Scale look vectors by range
     east, north, up = np.stack((east, north, up)) * ranges
