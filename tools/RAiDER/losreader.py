@@ -15,6 +15,7 @@ import xml.etree.ElementTree as ET
 import numpy as np
 
 import RAiDER.utilFcns as utilFcns
+import RAiDER.geometry as geometry
 import RAiDER.utilFcns as mathFcns
 from RAiDER import Geo2rdr
 from RAiDER.constants import _ZREF, Zenith
@@ -114,7 +115,7 @@ def state_to_los(t, x, y, z, vx, vy, vz, lats, lons, heights, zref=_ZREF):
         #slant_ranges[i] = slant_range
 
     # We need LOS defined as pointing from the ground pixel to the sensor in ECEF reference frame
-    #sp = np.stack(utilFcns.lla2ecef(lats, lons, heights),axis = -1)
+    #sp = np.stack(geometry.lla2ecef(lats, lons, heights),axis = -1)
     #pt_rng = np.linalg.norm(sp,axis=-1)
     #slant_ranges = slant_ranges - pt_rng
     los = -loss  # * slant_ranges
@@ -267,11 +268,11 @@ def los_to_lv(incidence, heading, lats, lons, heights, zref, ranges=None):
     # Scale look vectors by range
     east, north, up = np.stack((east, north, up)) * ranges
 
-    xyz = utilFcns.enu2ecef(
+    xyz = geometry.enu2ecef(
         east.flatten(), north.flatten(), up.flatten(), lats.flatten(),
         lons.flatten(), heights.flatten())
 
-    sp_xyz = utilFcns.lla2ecef(lats.flatten(), lons.flatten(), heights.flatten())
+    sp_xyz = geometry.lla2ecef(lats.flatten(), lons.flatten(), heights.flatten())
     los = np.stack(xyz, axis=-1) - np.stack(sp_xyz, axis=-1)
     los = los.reshape(east.shape + (3,))
 

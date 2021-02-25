@@ -22,30 +22,6 @@ from RAiDER.logger import *
 gdal.UseExceptions()
 
 
-def lla2ecef(lat, lon, height):
-    ecef = pyproj.Proj(proj='geocent')
-    lla = pyproj.Proj(proj='latlong')
-
-    return pyproj.transform(lla, ecef, lon, lat, height, always_xy=True)
-
-
-def enu2ecef(east, north, up, lat0, lon0, h0):
-    """Return ecef from enu coordinates."""
-    # I'm looking at
-    # https://github.com/scivision/pymap3d/blob/master/pymap3d/__init__.py
-    x0, y0, z0 = lla2ecef(lat0, lon0, h0)
-
-    t = mathFcns.cosd(lat0) * up - mathFcns.sind(lat0) * north
-    w = mathFcns.sind(lat0) * up + mathFcns.cosd(lat0) * north
-
-    u = mathFcns.cosd(lon0) * t - mathFcns.sind(lon0) * east
-    v = mathFcns.sind(lon0) * t + mathFcns.cosd(lon0) * east
-
-    my_ecef = np.stack((x0 + u, y0 + v, z0 + w))
-
-    return my_ecef
-
-
 def gdal_extents(fname):
     if os.path.exists(fname + '.vrt'):
         fname = fname + '.vrt'
