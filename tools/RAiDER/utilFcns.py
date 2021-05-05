@@ -15,11 +15,11 @@ import progressbar
 import RAiDER.mathFcns as mathFcns
 import RAiDER.ioFcns as ioFcns
 
+import RAiDER.mathFcns as mathFcns
+
 from RAiDER.constants import Zenith
 from RAiDER import Geo2rdr
 from RAiDER.logger import *
-
-gdal.UseExceptions()
 
 
 def writeResultsToHDF5(lats, lons, hgts, wet, hydro, filename, delayType=None):
@@ -146,7 +146,11 @@ def _get_Re(lats):
     # TODO: verify constants, add to base class constants?
     Rmax = 6378137
     Rmin = 6356752
+<<<<<<< HEAD
     return np.sqrt(1 / (((mathFcns.cosd(lats)**2) / Rmax**2) + ((mathFcns.sind(lats)**2) / Rmin**2)))
+=======
+    return np.sqrt(1 / (((cosd(lats)**2) / Rmax**2) + ((mathFcns.sind(lats)**2) / Rmin**2)))
+>>>>>>> 40a0ae0f840ea08b881e7e4fbe4204333e05b637
 
 
 def _geo_to_ht(lats, hts, g0=9.80556):
