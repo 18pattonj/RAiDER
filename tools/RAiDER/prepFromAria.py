@@ -9,8 +9,8 @@
 import numpy as np
 from osgeo import gdal
 
-from RAiDER.utilFcns import gdal_open, writeArrayToRaster
-
+from RAiDER.utilFcns import writeArrayToRaster
+from RAiDER.ioFcns import gdal_open
 
 def parse_args():
     """Parse command line arguments using argparse."""

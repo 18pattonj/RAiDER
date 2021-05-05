@@ -13,8 +13,8 @@ from RAiDER.mathFcns import (
     sind, cosd,
 )
 from RAiDER.utilFcns import (
-    _least_nonzero, gdal_open, makeDelayFileNames,
-    writeArrayToRaster, writeResultsToHDF5, gdal_extents, modelName2Module,
+    _least_nonzero, makeDelayFileNames,
+    writeArrayToRaster, writeResultsToHDF5, modelName2Module,
     getTimeFromFile
 )
 
@@ -115,10 +115,6 @@ def test_cosd():
     )
 
 
-def test_gdal_open():
-    out = gdal_open(os.path.join(TEST_DIR, "test_geom", "lat.rdr"), False)
-
-    assert np.allclose(out.shape, (45, 226))
 
 
 def test_writeResultsToHDF5(tmp_path):
@@ -244,26 +240,6 @@ def test_least_nonzero_2():
         atol=1e-16,
         equal_nan=True
     )
-
-
-def test_gdal_extent():
-    # Create a simple georeferenced test file
-    ds = gdal.GetDriverByName('GTiff').Create('test.tif', 11, 11, 1, gdal.GDT_Float64)
-    ds.SetGeoTransform((17.0, 0.1, 0, 18.0, 0, -0.1))
-    band = ds.GetRasterBand(1)
-    band.WriteArray(np.random.randn(11, 11))
-    srs = osr.SpatialReference()
-    srs.ImportFromEPSG(4326)
-    ds.SetProjection(srs.ExportToWkt())
-    ds = None
-    band = None
-
-    assert gdal_extents('test.tif') == [17.0, 18.0, 18.0, 17.0]
-
-
-def test_gdal_extent2():
-    with pytest.raises(AttributeError):
-        gdal_extents(os.path.join(TEST_DIR, "test_geom", "lat.rdr"))
 
 
 def test_getTimeFromFile():

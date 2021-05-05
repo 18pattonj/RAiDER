@@ -20,10 +20,11 @@ from pyproj import Proj
 from shapely.geometry import shape, Polygon
 
 import RAiDER.utilFcns
+import RAiDER.ioFcns
 
 from RAiDER.interpolator import interpolateDEM
 from RAiDER.logger import *
-from RAiDER.utilFcns import gdal_open, gdal_extents
+from RAiDER.ioFcns import gdal_extents, gdal_open
 
 
 _DEM = "https://portal.opentopography.org/API/globaldem?demtype=SRTMGL1_E&west={}&south={}&east={}&north={}&outputFormat=GTiff"

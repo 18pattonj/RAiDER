@@ -13,70 +13,13 @@ from osgeo import gdal, osr
 import progressbar
 
 import RAiDER.mathFcns as mathFcns
+import RAiDER.ioFcns as ioFcns
 
 from RAiDER.constants import Zenith
 from RAiDER import Geo2rdr
 from RAiDER.logger import *
 
-
 gdal.UseExceptions()
-
-
-def gdal_extents(fname):
-    if os.path.exists(fname + '.vrt'):
-        fname = fname + '.vrt'
-    try:
-        ds = gdal.Open(fname, gdal.GA_ReadOnly)
-    except Exception:
-        raise OSError('File {} could not be opened'.format(fname))
-
-    # Check whether the file is georeferenced
-    proj = ds.GetProjection()
-    gt = ds.GetGeoTransform()
-    if not proj or not gt:
-        raise AttributeError('File {} does not contain geotransform information'.format(fname))
-
-    xSize, ySize = ds.RasterXSize, ds.RasterYSize
-
-    return [gt[0], gt[0] + (xSize - 1) * gt[1] + (ySize - 1) * gt[2], gt[3], gt[3] + (xSize - 1) * gt[4] + (ySize - 1) * gt[5]]
-
-
-def gdal_open(fname, returnProj=False, userNDV=None):
-    if os.path.exists(fname + '.vrt'):
-        fname = fname + '.vrt'
-    try:
-        ds = gdal.Open(fname, gdal.GA_ReadOnly)
-    except:
-        raise OSError('File {} could not be opened'.format(fname))
-    proj = ds.GetProjection()
-    gt = ds.GetGeoTransform()
-
-    val = []
-    for band in range(ds.RasterCount):
-        b = ds.GetRasterBand(band + 1)  # gdal counts from 1, not 0
-        data = b.ReadAsArray()
-        if userNDV is not None:
-            logger.debug('Using user-supplied NoDataValue')
-            data[data == userNDV] = np.nan
-        else:
-            try:
-                ndv = b.GetNoDataValue()
-                data[data == ndv] = np.nan
-            except:
-                logger.debug('NoDataValue attempt failed*******')
-        val.append(data)
-        b = None
-    ds = None
-
-    if len(val) > 1:
-        data = np.stack(val)
-    else:
-        data = val[0]
-
-    if not returnProj:
-        return data
-    else:
-        return data, proj, gt
 
 
 def writeResultsToHDF5(lats, lons, hgts, wet, hydro, filename, delayType=None):
@@ -193,7 +136,7 @@ def _get_g_ll(lats):
     Compute the variation in gravity constant with latitude
     '''
     # TODO: verify these constants. In particular why is the reference g different from self._g0?
-    return 9.80616 * (1 - 0.002637 * cosd(2 * lats) + 0.0000059 * (cosd(2 * lats))**2)
+    return 9.80616 * (1 - 0.002637 * mathFcns.cosd(2 * lats) + 0.0000059 * (mathFcns.cosd(2 * lats))**2)
 
 
 def _get_Re(lats):
@@ -203,7 +146,7 @@ def _get_Re(lats):
     # TODO: verify constants, add to base class constants?
     Rmax = 6378137
     Rmin = 6356752
-    return np.sqrt(1 / (((cosd(lats)**2) / Rmax**2) + ((mathFcns.sind(lats)**2) / Rmin**2)))
+    return np.sqrt(1 / (((mathFcns.cosd(lats)**2) / Rmax**2) + ((mathFcns.sind(lats)**2) / Rmin**2)))
 
 
 def _geo_to_ht(lats, hts, g0=9.80556):
