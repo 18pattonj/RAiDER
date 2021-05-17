@@ -12,11 +12,11 @@ from pyproj import CRS
 
 from RAiDER.models.weatherModel import WeatherModel
 from RAiDER.logger import logger
+from RAiDER.progressBar import show_progress
 from RAiDER.utilFcns import (
     writeWeatherVars2NETCDF4, 
     roundTime, 
-    read_NCMR_loginInfo, 
-    show_progress
+    read_NCMR_loginInfo
 )
 
 

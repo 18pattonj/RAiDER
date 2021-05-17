@@ -10,7 +10,6 @@ import numpy as np
 import pandas as pd
 import pyproj
 from osgeo import gdal, osr
-import progressbar
 
 import RAiDER.mathFcns as mathFcns
 import RAiDER.ioFcns as ioFcns
@@ -146,11 +145,7 @@ def _get_Re(lats):
     # TODO: verify constants, add to base class constants?
     Rmax = 6378137
     Rmin = 6356752
-<<<<<<< HEAD
     return np.sqrt(1 / (((mathFcns.cosd(lats)**2) / Rmax**2) + ((mathFcns.sind(lats)**2) / Rmin**2)))
-=======
-    return np.sqrt(1 / (((cosd(lats)**2) / Rmax**2) + ((mathFcns.sind(lats)**2) / Rmin**2)))
->>>>>>> 40a0ae0f840ea08b881e7e4fbe4204333e05b637
 
 
 def _geo_to_ht(lats, hts, g0=9.80556):
@@ -783,19 +778,3 @@ def read_NCMR_loginInfo(filepath=None):
     password = lines[2].strip().split(': ')[1]
 
     return url, username, password
-
-
-pbar = None
-
-def show_progress(block_num, block_size, total_size):
-    global pbar
-    if pbar is None:
-        pbar = progressbar.ProgressBar(maxval=total_size)
-        pbar.start()
-    
-    downloaded = block_num * block_size
-    if downloaded < total_size:
-        pbar.update(downloaded)
-    else:
-        pbar.finish()
-        pbar = None
